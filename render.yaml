@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: ats-resume-analyzer
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: pip install --upgrade pip setuptools wheel && pip install -r requirements.txt
+    startCommand: gunicorn -w 4 -b 0.0.0.0:$PORT --timeout 120 --max-requests 1000 app:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
+    disk:
+      name: uploads-disk
+      mountPath: /opt/render/project/src/uploads
+      sizeGB: 1
